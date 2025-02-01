@@ -5,5 +5,5 @@ export const Route = createFileRoute("/remote")({
 });
 
 function RouteComponent() {
-    return <div>Hello &quot;/remote&quot;!</div>;
+    return <div>Hello /remote!</div>;
 }
