@@ -4,11 +4,12 @@ import { z } from "zod";
 import { zodValidator } from "@tanstack/zod-adapter";
 
 const graphParamsSchema = z.object({
-    type: z.enum(["local", "git", "cargo", "npm", "jsr", "pip"]),
-    path: z.string(),
+    source: z.enum(["local", "git", "cargo", "npm", "jsr", "pypi"]),
+    value: z.string(),
 });
 
-export type GraphParams = z.infer<typeof graphParamsSchema>;
+export type PackageInfo = z.infer<typeof graphParamsSchema>;
+export type PackageSource = PackageInfo["source"];
 
 export const Route = createFileRoute("/graph")({
     component: RouteComponent,
@@ -16,12 +17,12 @@ export const Route = createFileRoute("/graph")({
 });
 
 function RouteComponent() {
-    const { type, path } = Route.useSearch();
+    const { source, value } = Route.useSearch();
 
     return (
         <div>
-            <span>type: {type}</span>
-            <span>path: {path}</span>
+            <span>source: {source}</span>
+            <span>value: {value}</span>
         </div>
     );
 }

@@ -10,123 +10,104 @@
 
 // Import Routes
 
-import { Route as rootRoute } from "./routes/__root";
-import { Route as RemoteImport } from "./routes/remote";
-import { Route as GraphImport } from "./routes/graph";
-import { Route as AboutImport } from "./routes/about";
-import { Route as IndexImport } from "./routes/index";
+import { Route as rootRoute } from './routes/__root'
+import { Route as GraphImport } from './routes/graph'
+import { Route as AboutImport } from './routes/about'
+import { Route as IndexImport } from './routes/index'
 
 // Create/Update Routes
 
-const RemoteRoute = RemoteImport.update({
-    id: "/remote",
-    path: "/remote",
-    getParentRoute: () => rootRoute,
-} as any);
-
 const GraphRoute = GraphImport.update({
-    id: "/graph",
-    path: "/graph",
-    getParentRoute: () => rootRoute,
-} as any);
+  id: '/graph',
+  path: '/graph',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const AboutRoute = AboutImport.update({
-    id: "/about",
-    path: "/about",
-    getParentRoute: () => rootRoute,
-} as any);
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const IndexRoute = IndexImport.update({
-    id: "/",
-    path: "/",
-    getParentRoute: () => rootRoute,
-} as any);
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
 
 // Populate the FileRoutesByPath interface
 
-declare module "@tanstack/react-router" {
-    interface FileRoutesByPath {
-        "/": {
-            id: "/";
-            path: "/";
-            fullPath: "/";
-            preLoaderRoute: typeof IndexImport;
-            parentRoute: typeof rootRoute;
-        };
-        "/about": {
-            id: "/about";
-            path: "/about";
-            fullPath: "/about";
-            preLoaderRoute: typeof AboutImport;
-            parentRoute: typeof rootRoute;
-        };
-        "/graph": {
-            id: "/graph";
-            path: "/graph";
-            fullPath: "/graph";
-            preLoaderRoute: typeof GraphImport;
-            parentRoute: typeof rootRoute;
-        };
-        "/remote": {
-            id: "/remote";
-            path: "/remote";
-            fullPath: "/remote";
-            preLoaderRoute: typeof RemoteImport;
-            parentRoute: typeof rootRoute;
-        };
+declare module '@tanstack/react-router' {
+  interface FileRoutesByPath {
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
     }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutImport
+      parentRoute: typeof rootRoute
+    }
+    '/graph': {
+      id: '/graph'
+      path: '/graph'
+      fullPath: '/graph'
+      preLoaderRoute: typeof GraphImport
+      parentRoute: typeof rootRoute
+    }
+  }
 }
 
 // Create and export the route tree
 
 export interface FileRoutesByFullPath {
-    "/": typeof IndexRoute;
-    "/about": typeof AboutRoute;
-    "/graph": typeof GraphRoute;
-    "/remote": typeof RemoteRoute;
+  '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/graph': typeof GraphRoute
 }
 
 export interface FileRoutesByTo {
-    "/": typeof IndexRoute;
-    "/about": typeof AboutRoute;
-    "/graph": typeof GraphRoute;
-    "/remote": typeof RemoteRoute;
+  '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/graph': typeof GraphRoute
 }
 
 export interface FileRoutesById {
-    __root__: typeof rootRoute;
-    "/": typeof IndexRoute;
-    "/about": typeof AboutRoute;
-    "/graph": typeof GraphRoute;
-    "/remote": typeof RemoteRoute;
+  __root__: typeof rootRoute
+  '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/graph': typeof GraphRoute
 }
 
 export interface FileRouteTypes {
-    fileRoutesByFullPath: FileRoutesByFullPath;
-    fullPaths: "/" | "/about" | "/graph" | "/remote";
-    fileRoutesByTo: FileRoutesByTo;
-    to: "/" | "/about" | "/graph" | "/remote";
-    id: "__root__" | "/" | "/about" | "/graph" | "/remote";
-    fileRoutesById: FileRoutesById;
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths: '/' | '/about' | '/graph'
+  fileRoutesByTo: FileRoutesByTo
+  to: '/' | '/about' | '/graph'
+  id: '__root__' | '/' | '/about' | '/graph'
+  fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
-    IndexRoute: typeof IndexRoute;
-    AboutRoute: typeof AboutRoute;
-    GraphRoute: typeof GraphRoute;
-    RemoteRoute: typeof RemoteRoute;
+  IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
+  GraphRoute: typeof GraphRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
-    IndexRoute: IndexRoute,
-    AboutRoute: AboutRoute,
-    GraphRoute: GraphRoute,
-    RemoteRoute: RemoteRoute,
-};
+  IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
+  GraphRoute: GraphRoute,
+}
 
 export const routeTree = rootRoute
-    ._addFileChildren(rootRouteChildren)
-    ._addFileTypes<FileRouteTypes>();
+  ._addFileChildren(rootRouteChildren)
+  ._addFileTypes<FileRouteTypes>()
 
 /* ROUTE_MANIFEST_START
 {
@@ -136,8 +117,7 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/about",
-        "/graph",
-        "/remote"
+        "/graph"
       ]
     },
     "/": {
@@ -148,9 +128,6 @@ export const routeTree = rootRoute
     },
     "/graph": {
       "filePath": "graph.tsx"
-    },
-    "/remote": {
-      "filePath": "remote.tsx"
     }
   }
 }

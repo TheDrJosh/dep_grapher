@@ -4,11 +4,11 @@ import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 export const Route = createRootRoute({
     component: () => (
         <>
-            <div className="flex h-dvh flex-col dark:bg-neutral-700 dark:text-white">
-                <div className="flex items-center gap-2 bg-neutral-100 p-2 dark:bg-neutral-600">
+            <div className="flex h-dvh flex-col bg-backround dark:bg-backround-dark dark:text-white">
+                <div className="flex items-center gap-2 bg-primary p-2 dark:bg-primary-dark">
                     <Link
                         to="/"
-                        className="text-4xl font-bold tracking-tighter text-orange-500 shadow-orange-700 hover:[text-shadow:_0_0_3px_var(--tw-shadow-color)]"
+                        className="text-4xl font-bold tracking-tighter text-accent shadow-orange-300 hover:[text-shadow:_0_0_3px_var(--tw-shadow-color)] dark:shadow-orange-700"
                     >
                         Dep Grapher
                     </Link>
