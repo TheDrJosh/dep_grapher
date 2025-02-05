@@ -6,19 +6,8 @@ import {
 import { open } from "@tauri-apps/plugin-dialog";
 import { twJoin } from "tailwind-merge";
 import { useQuery } from "@tanstack/react-query";
-// import { z } from "zod";
 import { debug } from "@tauri-apps/plugin-log";
-// import { projectTypeSchema } from "../schemas";
 import { commands, type Project } from "../bindings";
-
-// const projectSchema = z.object({
-//     name: z.string(),
-//     project_type: projectTypeSchema,
-// });
-
-// type Project = z.infer<typeof projectSchema>;
-
-// const projectListSchema = z.array(projectSchema);
 
 interface FormValues {
     path: string;

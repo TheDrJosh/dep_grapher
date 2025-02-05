@@ -115,25 +115,25 @@ function ProjectSelectForm() {
                     value="cargo"
                     className="grow rounded-b-4xl bg-primary p-5 outline-none dark:bg-primary-dark"
                 >
-                    <RegistryProjectForm source="cargo" />
+                    <RegistryProjectForm registry="Cargo" />
                 </Tabs.Content>
                 <Tabs.Content
                     value="npm"
                     className="grow rounded-b-4xl bg-primary p-5 outline-none dark:bg-primary-dark"
                 >
-                    <RegistryProjectForm source="npm" />
+                    <RegistryProjectForm registry="Npm" />
                 </Tabs.Content>
                 <Tabs.Content
                     value="jsr"
                     className="grow rounded-b-4xl bg-primary p-5 outline-none dark:bg-primary-dark"
                 >
-                    <RegistryProjectForm source="jsr" />
+                    <RegistryProjectForm registry="Jsr" />
                 </Tabs.Content>
                 <Tabs.Content
                     value="pypi"
                     className="grow rounded-b-4xl bg-primary p-5 outline-none dark:bg-primary-dark"
                 >
-                   <RegistryProjectForm source="pypi" />
+                   <RegistryProjectForm registry="PyPI" />
                 </Tabs.Content>
             </Tabs.Root>
         </>

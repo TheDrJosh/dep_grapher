@@ -20,6 +20,14 @@ async getProjectsInDir(path: string) : Promise<Result<Project[], ProjectsInDirEr
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
 }
+},
+async searchRegistry(search: string, reg: Registry, customUrl: string | null) : Promise<Result<string[], SearchRegistryError>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("search_registry", { search, reg, customUrl }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
 }
 }
 
@@ -37,6 +45,8 @@ export type InvalidPath = "NotFound" | "NotADirectory" | "InvalidName" | "NotAbs
 export type Project = { name: string; project_type: ProjectType }
 export type ProjectType = "Rust" | "NodeJS" | "Deno" | "Python" | "Zig"
 export type ProjectsInDirError = "NotAProjectPath"
+export type Registry = "Cargo" | "Npm" | "Jsr" | "PyPI"
+export type SearchRegistryError = "UrlParseError" | "NetworkError" | "ServerError" | "ParseError"
 
 /** tauri-specta globals **/
 

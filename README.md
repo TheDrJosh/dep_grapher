@@ -15,3 +15,27 @@ dependancy tree viewer
   - Pipfile (python)
 
 ## Todo
+
+- [ ] options page
+  - [ ] dark / light / system
+  - [ ] default registry api urls
+- [ ] support opening local projects
+  - [x] rust
+  - [ ] node
+  - [ ] deno
+  - [x] python
+  - [x] zig
+- [ ] support opening git projects
+  - [ ] local
+  - [ ] remote
+- [ ] suport opening from registries
+  - [ ] crate.io
+  - [ ] npm
+  - [ ] jsr
+  - [ ] pypi
+- [ ] graph view
+
+## Info
+
+crate.io registry index: [[https://github.com/rust-lang/crates.io-index]]
+npm registry api: [[https://registry.npmjs.org/]]

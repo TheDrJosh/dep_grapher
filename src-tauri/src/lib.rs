@@ -3,18 +3,20 @@
 use std::{io::ErrorKind, path::PathBuf};
 
 use get_projects::get_projects_in_dir;
+use registrys::search_registry;
 use serde::Serialize;
 use specta::Type;
 use specta_typescript::Typescript;
 use tauri_specta::{collect_commands, collect_events};
 
 mod get_projects;
+mod registrys;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     let builder = tauri_specta::Builder::<tauri::Wry>::new()
         .error_handling(tauri_specta::ErrorHandlingMode::Result)
-        .commands(collect_commands![is_path_valid, get_projects_in_dir])
+        .commands(collect_commands![is_path_valid, get_projects_in_dir, search_registry])
         .events(collect_events![]);
 
     #[cfg(debug_assertions)]
