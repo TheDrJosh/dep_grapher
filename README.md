@@ -8,11 +8,11 @@ dependancy tree viewer
   - [ ] dark / light / system
   - [ ] default registry api urls
 - [ ] support opening local projects
-  - [x] rust
-  - [ ] node
-  - [ ] deno
-  - [x] python
-  - [x] zig
+  - [x] rust (Cargo.toml)
+  - [ ] node (package.json)
+  - [ ] deno (deno.json/jsonc)
+  - [ ] python (requirement.txt, PipFile, pyproject.toml)
+  - [x] zig (build.zig.zon)
 - [ ] support opening git projects
   - [ ] local
   - [ ] remote
