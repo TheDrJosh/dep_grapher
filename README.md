@@ -29,3 +29,7 @@ crate.io registry api: [[https://crates.io]] [[https://doc.rust-lang.org/cargo/r
 npm registry api: [[https://registry.npmjs.org/]] [[https://github.com/npm/registry/blob/main/docs/REGISTRY-API.md]]
 jsr registry api: [[https://api.jsr.io]] [[https://jsr.io/docs/api-reference#tag/default/GET/packages]]
 pypl registry api: [[https://pypi.org/simple/]] [[https://packaging.python.org/en/latest/specifications/simple-repository-api/]]
+
+## Maybe
+
+- add cmake, meson, Bazel, Premake, and MSBuild support for c/c++ projects
