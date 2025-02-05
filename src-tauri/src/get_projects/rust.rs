@@ -43,5 +43,5 @@ pub async fn read_rust_project_info(path: &Path) -> Vec<String> {
         }
     }
 
-    todo!()
+    names
 }

@@ -2,17 +2,17 @@ use std::{collections::HashMap, path::Path};
 
 use serde::Deserialize;
 
-pub async fn read_zig_project_info(path: &Path) -> Vec<String> {
+pub async fn read_zig_project_info(path: &Path) -> Option<String> {
     let Ok(build_zig_zon_source) = tokio::fs::read_to_string(path.join("build.zig.zon")).await
     else {
-        return vec![];
+        return None;
     };
 
     let Ok(build_zig_zon) = serde_zon::from_str::<BuildZigZon>(&build_zig_zon_source) else {
-        return vec![];
+        return None;
     };
 
-    vec![build_zig_zon.name]
+    Some(build_zig_zon.name)
 }
 
 #[derive(Debug, Clone, Deserialize)]

@@ -1,10 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ScrollArea, Tabs } from "radix-ui";
 import { type PackageInfo } from "./graph";
-import { useForm } from "@tanstack/react-form";
-import { invoke } from "@tauri-apps/api/core";
-import { open } from "@tauri-apps/plugin-dialog";
-import { twJoin } from "tailwind-merge";
+
+import { LocalProjectForm } from "../components/local_form";
+import { RegistryProjectForm } from "../components/registry_form";
 
 export const Route = createFileRoute("/")({
     component: Index,
@@ -24,6 +23,7 @@ function RecentList() {
         {
             source: "npm",
             value: "leftpad",
+            type: "nodejs",
         },
     ];
 
@@ -38,10 +38,7 @@ function RecentList() {
                                 <Link
                                     key={data.value + data.source}
                                     to="/graph"
-                                    search={{
-                                        source: data.source,
-                                        value: data.value,
-                                    }}
+                                    search={data}
                                     className="hover:underline"
                                 >
                                     leftpad{" "}
@@ -112,131 +109,33 @@ function ProjectSelectForm() {
                     value="git"
                     className="grow rounded-b-4xl bg-primary p-5 outline-none dark:bg-primary-dark"
                 >
-                    <div>git</div>
+                    git
                 </Tabs.Content>
                 <Tabs.Content
                     value="cargo"
                     className="grow rounded-b-4xl bg-primary p-5 outline-none dark:bg-primary-dark"
                 >
-                    <div>cargo</div>
+                    <RegistryProjectForm source="cargo" />
                 </Tabs.Content>
                 <Tabs.Content
                     value="npm"
                     className="grow rounded-b-4xl bg-primary p-5 outline-none dark:bg-primary-dark"
                 >
-                    <div>npm</div>
+                    <RegistryProjectForm source="npm" />
                 </Tabs.Content>
                 <Tabs.Content
                     value="jsr"
                     className="grow rounded-b-4xl bg-primary p-5 outline-none dark:bg-primary-dark"
                 >
-                    <div>jsr</div>
+                    <RegistryProjectForm source="jsr" />
                 </Tabs.Content>
                 <Tabs.Content
                     value="pypi"
                     className="grow rounded-b-4xl bg-primary p-5 outline-none dark:bg-primary-dark"
                 >
-                    <div>pypl</div>
+                   <RegistryProjectForm source="pypi" />
                 </Tabs.Content>
             </Tabs.Root>
-        </>
-    );
-}
-
-function LocalProjectForm() {
-    const form = useForm({
-        defaultValues: {
-            path: "",
-        },
-        onSubmit: ({ value }) => {},
-    });
-
-    return (
-        <>
-            <form
-                onSubmit={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    form.handleSubmit();
-                }}
-            >
-                <div>
-                    <form.Field
-                        name="path"
-                        validators={{
-                            onChangeAsync: async ({ value }) => {
-                                try {
-                                    await invoke("is_path_valid", {
-                                        path: value,
-                                    });
-                                    return undefined;
-                                } catch (e) {
-                                    if (typeof e === "string") {
-                                        console.log(e);
-
-                                        return e;
-                                    } else {
-                                        return "unknown";
-                                    }
-                                }
-                            },
-                        }}
-                    >
-                        {(field) => (
-                            <div>
-                                <label htmlFor={field.name}>
-                                    Enter path to project
-                                </label>
-                                <div>
-                                    <input
-                                        name={field.name}
-                                        value={field.state.value}
-                                        onBlur={field.handleBlur}
-                                        onChange={(e) =>
-                                            field.handleChange(e.target.value)
-                                        }
-                                        className={twJoin(
-                                            "w-96 rounded bg-white p-1 text-black focus:outline",
-                                            field.state.meta.errors.length
-                                                ? "border-3 border-red-600"
-                                                : "border-2 border-backround dark:border-backround-dark"
-                                        )}
-                                        autoComplete="false"
-                                        autoCorrect="false"
-                                    />
-
-                                    <button
-                                        onClick={() => {
-                                            open({
-                                                multiple: false,
-                                                directory: true,
-                                            }).then((dir) => {
-                                                if (dir) {
-                                                    field.setValue((_) => dir);
-                                                }
-                                            });
-                                        }}
-                                        className=""
-                                    >
-                                        Browse
-                                    </button>
-                                </div>
-                                <div className="h-8">
-                                    {field.state.meta.errors.length ? (
-                                        <em>
-                                            {field.state.meta.errors.join(",")}
-                                        </em>
-                                    ) : null}
-                                </div>
-                            </div>
-                        )}
-                    </form.Field>
-                    {/* Select what project(s) in that workspace you want to see*/}
-                </div>
-                <button type="submit" className="">
-                    Submit
-                </button>
-            </form>
         </>
     );
 }

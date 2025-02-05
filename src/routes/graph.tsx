@@ -2,10 +2,12 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { z } from "zod";
 import { zodValidator } from "@tanstack/zod-adapter";
+import { projectSourceSchema, projectTypeSchema } from "../schemas";
 
 const graphParamsSchema = z.object({
-    source: z.enum(["local", "git", "cargo", "npm", "jsr", "pypi"]),
+    source: projectSourceSchema,
     value: z.string(),
+    type: projectTypeSchema
 });
 
 export type PackageInfo = z.infer<typeof graphParamsSchema>;

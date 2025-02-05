@@ -15,5 +15,3 @@ dependancy tree viewer
   - Pipfile (python)
 
 ## Todo
-
-- test

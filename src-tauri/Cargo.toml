@@ -29,4 +29,8 @@ toml = "0.8.19"
 cargo_toml = "0.21.0"
 globmatch = "0.3.0"
 serde_zon = "0.0.3"
-
+tauri-plugin-log = { version = "2", features = ["colored"] }
+log = "0.4.25"
+tauri-specta = {version = "2.0.0-rc.21", features = ["derive", "typescript"] }
+specta = "=2.0.0-rc.22"
+specta-typescript = "0.0.9"

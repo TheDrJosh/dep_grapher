@@ -7,6 +7,7 @@ import tsParser from "@typescript-eslint/parser";
 import { includeIgnoreFile } from "@eslint/compat";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import pluginQuery from '@tanstack/eslint-plugin-query'
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -22,6 +23,7 @@ export default [
     pluginReact.configs.flat.recommended,
     pluginReact.configs.flat['jsx-runtime'],
     eslintConfigPrettier,
+    ...pluginQuery.configs['flat/recommended'],
     {
         settings: {
             react: {
