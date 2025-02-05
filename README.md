@@ -2,18 +2,6 @@
 
 dependancy tree viewer
 
-## Ideas
-
-- support for local and remote repositorys (git and package registrys)
-- support for rust (cargo), js (npm and jsr), python (PyPl), zig
-- suport for local / git package files
-  - cargo.toml (rust)
-  - package.json (javascript)
-  - deno.json / deno.jsonc (javascript)
-  - build.zig.zon (zig)
-  - requirements.txt (python)
-  - Pipfile (python)
-
 ## Todo
 
 - [ ] options page
@@ -37,5 +25,7 @@ dependancy tree viewer
 
 ## Info
 
-crate.io registry index: [[https://github.com/rust-lang/crates.io-index]]
-npm registry api: [[https://registry.npmjs.org/]]
+crate.io registry api: [[https://crates.io]] [[https://doc.rust-lang.org/cargo/reference/registry-web-api.html]]
+npm registry api: [[https://registry.npmjs.org/]] [[https://github.com/npm/registry/blob/main/docs/REGISTRY-API.md]]
+jsr registry api: [[https://api.jsr.io]] [[https://jsr.io/docs/api-reference#tag/default/GET/packages]]
+pypl registry api: [[https://pypi.org/simple/]] [[https://packaging.python.org/en/latest/specifications/simple-repository-api/]]
