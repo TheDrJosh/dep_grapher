@@ -16,6 +16,7 @@ dependancy tree viewer
 - [ ] support opening git projects
   - [ ] local
   - [ ] remote
+  - [ ] submodules
 - [ ] suport opening from registries
   - [ ] crate.io
   - [ ] npm
