@@ -34,7 +34,7 @@ export function RegistryProjectForm(props: { registry: Registry }) {
                 <RegistrySearch form={form} registry={registry} />
             </div>
             <div>
-                <VersionSelect form={form} />
+                {/* <VersionSelect form={form} /> */}
             </div>
             <button type="submit">Submit</button>
         </form>
@@ -127,8 +127,8 @@ function SearchResults(props: {
     );
 }
 
-function VersionSelect(props: {
-    form: ReactFormExtendedApi<FormValues, undefined>;
-}) {
-    return <></>;
-}
+// function VersionSelect(props: {
+//     form: ReactFormExtendedApi<FormValues, undefined>;
+// }) {
+//     return <></>;
+// }

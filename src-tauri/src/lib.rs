@@ -35,7 +35,7 @@ pub fn run() {
     #[cfg(debug_assertions)]
     builder
         .export(
-            Typescript::default().header("/* eslint-disable */\n"),
+            Typescript::default().header("/* eslint-disable */\n// @ts-nocheck\n"),
             "../src/bindings.ts",
         )
         .expect("Failed to export typescript bindings");
