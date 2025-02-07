@@ -7,18 +7,18 @@ import { open } from "@tauri-apps/plugin-dialog";
 import { twJoin } from "tailwind-merge";
 import { useQuery } from "@tanstack/react-query";
 import { debug } from "@tauri-apps/plugin-log";
-import { commands, type Project } from "../bindings";
+import { commands, type Package } from "../bindings";
 
 interface FormValues {
     path: string;
-    selected_project: Project | null;
+    selected_package: Package | null;
 }
 
 export function LocalProjectForm() {
     const form = useForm<FormValues>({
         defaultValues: {
             path: "",
-            selected_project: null,
+            selected_package: null,
         } as const,
         onSubmit: ({ value }) => {
             debug(JSON.stringify(value));
@@ -84,7 +84,7 @@ function PathSelector(params: {
             }}
             listeners={{
                 onChange: () => {
-                    form.setFieldValue("selected_project", null);
+                    form.setFieldValue("selected_package", null);
                 },
             }}
         >
@@ -146,7 +146,9 @@ function ProjectSelector(params: {
     const { data, error } = useQuery({
         queryKey: ["project_names", path],
         queryFn: async () => {
-            const res = await commands.getProjectsInDir(path);
+            const res = await commands.resolvePackage({
+                local: { path: path },
+            });
 
             if (res.status == "ok") {
                 return res.data;
@@ -161,7 +163,7 @@ function ProjectSelector(params: {
     return (
         <div>
             <form.Field
-                name="selected_project"
+                name="selected_package"
                 validators={{
                     onChange: ({ value }) => {
                         if (value === null) {
@@ -176,15 +178,11 @@ function ProjectSelector(params: {
                             <em className="text-red-500">{error.toString()}</em>
                         ) : data ? (
                             <>
-                                {data.map((project) => (
+                                {data.map((pack) => (
                                     <ProjectSelectBox
-                                        project={project}
+                                        pack={pack}
                                         field={field}
-                                        key={
-                                            project.name +
-                                            "|" +
-                                            project.project_type
-                                        }
+                                        key={pack.name + "|" + pack.language}
                                     />
                                 ))}
 
@@ -207,33 +205,31 @@ function ProjectSelector(params: {
 }
 
 function ProjectSelectBox(params: {
-    project: Project;
+    pack: Package;
     field: FieldApi<
         FormValues,
-        "selected_project",
+        "selected_package",
         undefined,
         undefined,
-        Project | null
+        Package | null
     >;
 }) {
-    const { project, field } = params;
+    const { pack, field } = params;
     return (
         <div>
             <input
                 type="radio"
-                id={project.name + "|" + project.project_type}
+                id={pack.name + "|" + pack.language}
                 name={field.name}
-                value={JSON.stringify(project)}
+                value={JSON.stringify(pack)}
                 onBlur={field.handleBlur}
                 onChange={(e) => {
-                    field.handleChange(
-                        JSON.parse(e.target.value) as Project
-                    );
+                    field.handleChange(JSON.parse(e.target.value) as Package);
                 }}
             />
-            <label htmlFor={project.name + "|" + project.project_type}>
-                {project.name}{" "}
-                <span className="text-neutral-400">{project.project_type}</span>
+            <label htmlFor={pack.name + "|" + pack.language}>
+                {pack.name}{" "}
+                <span className="text-neutral-400">{pack.language}</span>
             </label>
         </div>
     );

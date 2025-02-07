@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use specta::Type;
 use tauri::Url;
 
-use super::Registry;
+use super::{Registry, RegistryType};
 
 #[derive(Debug, Serialize, Type, thiserror::Error)]
 #[serde(rename_all = "snake_case")]
@@ -26,10 +26,13 @@ const NUMBER_OF_RESULTS: usize = 4;
 
 impl Registry {
     fn search_url(&self, query: &str) -> Url {
-        let base_url = self.url().cloned().unwrap_or(self.default_url());
+        let base_url = self
+            .custom_url
+            .clone()
+            .unwrap_or(self.registry_type.default_url());
 
-        match self {
-            Registry::Cargo(_) => {
+        match self.registry_type {
+            RegistryType::Cargo => {
                 let mut search_url = base_url.join("api/v1/crates").unwrap();
 
                 search_url
@@ -39,7 +42,7 @@ impl Registry {
 
                 search_url
             }
-            Registry::Npm(_) => {
+            RegistryType::Npm => {
                 let mut search_url = base_url.join("-/v1/search").unwrap();
 
                 search_url
@@ -49,7 +52,7 @@ impl Registry {
 
                 search_url
             }
-            Registry::Jsr(_) => {
+            RegistryType::Jsr => {
                 let mut search_url = base_url.join("packages").unwrap();
 
                 search_url
@@ -59,7 +62,7 @@ impl Registry {
 
                 search_url
             }
-            Registry::PyPI(_) => todo!(),
+            RegistryType::PyPI => todo!(),
         }
     }
 
@@ -70,7 +73,7 @@ impl Registry {
     ) -> Result<Vec<SearchResult>, SearchRegistryError> {
         info!("Searching {:?} for {}", self, query);
 
-        if matches!(self, Self::Npm(_)) && query.len() < 2 {
+        if matches!(self.registry_type, RegistryType::Npm) && query.len() < 2 {
             return Ok(vec![]);
         }
 
@@ -91,8 +94,8 @@ impl Registry {
                 SearchRegistryError::Server(e)
             })?;
 
-        let search_results = match self {
-            Registry::Cargo(_) => res
+        let search_results = match self.registry_type {
+            RegistryType::Cargo => res
                 .json::<CargoSearchResult>()
                 .await
                 .map_err(|e| {
@@ -103,7 +106,7 @@ impl Registry {
                 .into_iter()
                 .map(|crate_| SearchResult { name: crate_.name })
                 .collect::<Vec<_>>(),
-            Registry::Npm(_) => res
+            RegistryType::Npm => res
                 .json::<NpmSearchResult>()
                 .await
                 .map_err(|e| {
@@ -116,7 +119,7 @@ impl Registry {
                     name: object.package.name,
                 })
                 .collect::<Vec<_>>(),
-            Registry::Jsr(_) => res
+            RegistryType::Jsr => res
                 .json::<JsrSearchResult>()
                 .await
                 .map_err(|e| {
@@ -127,7 +130,7 @@ impl Registry {
                 .into_iter()
                 .map(|package| SearchResult { name: package.name })
                 .collect::<Vec<_>>(),
-            Registry::PyPI(_) => todo!(),
+            RegistryType::PyPI => todo!(),
         };
 
         Ok(search_results

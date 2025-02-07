@@ -12,33 +12,31 @@ pub mod search;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Type)]
 #[serde(rename_all = "snake_case")]
-pub enum Registry {
-    Cargo(Option<Url>),
-    Npm(Option<Url>),
-    Jsr(Option<Url>),
-    PyPI(Option<Url>),
+pub enum RegistryType {
+    Cargo,
+    Npm,
+    Jsr,
+    #[serde(rename = "pypi")]
+    PyPI,
 }
 
-impl Registry {
+impl RegistryType {
     pub fn default_url(&self) -> Url {
         match self {
-            Registry::Cargo(_) => "https://crates.io",
-            Registry::Npm(_) => "https://registry.npmjs.org/",
-            Registry::Jsr(_) => "https://api.jsr.io",
-            Registry::PyPI(_) => "https://pypi.org/simple/",
+            Self::Cargo => "https://crates.io",
+            Self::Npm => "https://registry.npmjs.org/",
+            Self::Jsr => "https://api.jsr.io",
+            Self::PyPI => "https://pypi.org/simple/",
         }
         .parse()
         .unwrap()
     }
+}
 
-    pub fn url(&self) -> Option<&Url> {
-        match self {
-            Registry::Cargo(url) => url.as_ref(),
-            Registry::Npm(url) => url.as_ref(),
-            Registry::Jsr(url) => url.as_ref(),
-            Registry::PyPI(url) => url.as_ref(),
-        }
-    }
+#[derive(Debug, Clone, Serialize, Deserialize, Type)]
+pub struct Registry {
+    registry_type: RegistryType,
+    custom_url: Option<Url>,
 }
 
 #[tauri::command]

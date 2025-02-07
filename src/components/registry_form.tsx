@@ -5,7 +5,7 @@ import {
 } from "@tanstack/react-form";
 import { Command } from "cmdk";
 import { Search } from "lucide-react";
-import { commands, type Registry } from "../bindings";
+import { commands, type RegistryType } from "../bindings";
 import { useQuery } from "@tanstack/react-query";
 
 interface FormValues {
@@ -13,8 +13,8 @@ interface FormValues {
     version: string;
 }
 
-export function RegistryProjectForm(props: { registry: Registry }) {
-    const { registry } = props;
+export function RegistryProjectForm(props: { registry_type: RegistryType }) {
+    const { registry_type } = props;
     const form = useForm<FormValues>({
         defaultValues: {
             name: "",
@@ -31,7 +31,7 @@ export function RegistryProjectForm(props: { registry: Registry }) {
             }}
         >
             <div className="h-48">
-                <RegistrySearch form={form} registry={registry} />
+                <RegistrySearch form={form} registry_type={registry_type} />
             </div>
             <div>{/* <VersionSelect form={form} /> */}</div>
             <button type="submit">Submit</button>
@@ -41,9 +41,9 @@ export function RegistryProjectForm(props: { registry: Registry }) {
 
 function RegistrySearch(props: {
     form: ReactFormExtendedApi<FormValues, undefined>;
-    registry: Registry;
+    registry_type: RegistryType;
 }) {
-    const { form, registry } = props;
+    const { form, registry_type } = props;
 
     return (
         <>
@@ -67,7 +67,10 @@ function RegistrySearch(props: {
                             />
                         </div>
                         <Command.List className="max-h-32 overflow-x-hidden overflow-y-auto not-group-focus-within:hidden">
-                            <SearchResults field={field} registry={registry} />
+                            <SearchResults
+                                field={field}
+                                registry_type={registry_type}
+                            />
                         </Command.List>
                     </Command>
                 )}
@@ -78,16 +81,19 @@ function RegistrySearch(props: {
 
 function SearchResults(props: {
     field: FieldApi<FormValues, "name", undefined, undefined, string>;
-    registry: Registry;
+    registry_type: RegistryType;
 }) {
-    const { field, registry } = props;
+    const { field, registry_type } = props;
+
     const { data } = useQuery({
-        queryKey: ["registry_search", field.state.value, registry],
+        queryKey: ["registry_search", field.state.value, registry_type],
         queryFn: async () => {
             const res = await commands.searchRegistry(
-                field.state.value,
-                registry,
-                null
+                {
+                    custom_url: null,
+                    registry_type: registry_type,
+                },
+                field.state.value
             );
 
             if (res.status == "ok") {
@@ -106,13 +112,13 @@ function SearchResults(props: {
                     <Command.Empty className="p-6 text-sm">
                         No Results Found
                     </Command.Empty>
-                    {data.map((n) => (
+                    {data.map((result) => (
                         <Command.Item
                             className="relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none select-none data-[selected='true']:bg-accent"
-                            key={n}
-                            onSelect={() => field.handleChange(n)}
+                            key={result.name}
+                            onSelect={() => field.handleChange(result.name)}
                         >
-                            {n}
+                            {result.name}
                         </Command.Item>
                     ))}
                 </>
