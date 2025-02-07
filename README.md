@@ -23,6 +23,10 @@ dependancy tree viewer
   - [ ] jsr
   - [ ] pypi
 - [ ] graph view
+  - use [[https://reactflow.dev/]]
+  - use [[https://d3js.org/d3-force]]
+  - [ ] save file
+  - [ ] load file .dgf
 
 ## Info
 
@@ -37,3 +41,4 @@ pypl registry api: [[https://pypi.org/simple/]] [[https://packaging.python.org/e
 ## Maybe
 
 - add cmake, meson, Bazel, Premake, and MSBuild support for c/c++ projects
+- add test (js and rust) and add to ci

@@ -1,10 +1,9 @@
 import {
-    FieldApi,
+    type FieldApi,
     type ReactFormExtendedApi,
     useForm,
 } from "@tanstack/react-form";
 import { Command } from "cmdk";
-import { useState } from "react";
 import { Search } from "lucide-react";
 import { commands, type Registry } from "../bindings";
 import { useQuery } from "@tanstack/react-query";
@@ -84,7 +83,7 @@ function SearchResults(props: {
     registry: Registry;
 }) {
     const { field, registry } = props;
-    const { data, error } = useQuery({
+    const { data } = useQuery({
         queryKey: ["registry_search", field.state.value, registry],
         queryFn: async () => {
             const res = await commands.searchRegistry(
