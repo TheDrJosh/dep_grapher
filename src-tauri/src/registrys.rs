@@ -1,7 +1,5 @@
 use log::error;
 use log::info;
-use reqwest::header::USER_AGENT;
-use reqwest::Client;
 use reqwest::Url;
 use serde::{Deserialize, Serialize};
 use specta::Type;
@@ -73,7 +71,7 @@ struct JsrPackage {
     name: String,
 }
 
-const NUMBER_OF_RESULTS: usize = 5;
+const NUMBER_OF_RESULTS: usize = 4;
 
 #[tauri::command]
 #[specta::specta]
@@ -100,7 +98,7 @@ pub async fn search_registry(
             search_url
                 .query_pairs_mut()
                 .append_pair("q", &search)
-                .append_pair("per_page", &NUMBER_OF_RESULTS.to_string());
+                .append_pair("per_page", &(NUMBER_OF_RESULTS + 1).to_string());
 
             search_url
         }
@@ -114,7 +112,7 @@ pub async fn search_registry(
             search_url
                 .query_pairs_mut()
                 .append_pair("text", &search)
-                .append_pair("size", &NUMBER_OF_RESULTS.to_string());
+                .append_pair("size", &(NUMBER_OF_RESULTS + 1).to_string());
 
             search_url
         }
@@ -124,7 +122,7 @@ pub async fn search_registry(
             search_url
                 .query_pairs_mut()
                 .append_pair("query", &search)
-                .append_pair("limit", &NUMBER_OF_RESULTS.to_string());
+                .append_pair("limit", &(NUMBER_OF_RESULTS + 1).to_string());
 
             search_url
         }
@@ -183,5 +181,9 @@ pub async fn search_registry(
         Registry::PyPI => todo!(),
     };
 
-    Ok(search_results)
+    Ok(search_results
+        .into_iter()
+        .filter(|name| *name != search)
+        .take(NUMBER_OF_RESULTS)
+        .collect())
 }

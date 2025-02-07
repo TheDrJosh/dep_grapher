@@ -33,9 +33,7 @@ export function RegistryProjectForm(props: { registry: Registry }) {
             <div className="h-48">
                 <RegistrySearch form={form} registry={registry} />
             </div>
-            <div>
-                {/* <VersionSelect form={form} /> */}
-            </div>
+            <div>{/* <VersionSelect form={form} /> */}</div>
             <button type="submit">Submit</button>
         </form>
     );
@@ -53,10 +51,10 @@ function RegistrySearch(props: {
                 {(field) => (
                     <Command
                         label="Search"
-                        className="flex w-full flex-col overflow-hidden rounded-md bg-backround dark:bg-backround-dark"
+                        className="group flex w-full flex-col overflow-hidden rounded-md bg-backround dark:bg-backround-dark"
                     >
                         <div
-                            className="flex items-center border-b px-3"
+                            className="peer flex items-center border-b px-3"
                             // eslint-disable-next-line react/no-unknown-property
                             cmdk-input-wrapper=""
                         >
@@ -68,7 +66,7 @@ function RegistrySearch(props: {
                                 onBlur={field.handleBlur}
                             />
                         </div>
-                        <Command.List className="max-h-32 overflow-x-hidden overflow-y-auto">
+                        <Command.List className="max-h-32 overflow-x-hidden overflow-y-auto not-group-focus-within:hidden">
                             <SearchResults field={field} registry={registry} />
                         </Command.List>
                     </Command>
