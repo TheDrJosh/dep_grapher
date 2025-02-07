@@ -7,7 +7,7 @@
 
 
 export const commands = {
-async isPathValid(path: string) : Promise<Result<null, InvalidPath>> {
+async isPathValid(path: string) : Promise<Result<null, InvalidPathError>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("is_path_valid", { path }) };
 } catch (e) {
@@ -15,17 +15,17 @@ async isPathValid(path: string) : Promise<Result<null, InvalidPath>> {
     else return { status: "error", error: e  as any };
 }
 },
-async getProjectsInDir(path: string) : Promise<Result<Project[], ProjectsInDirError>> {
+async resolvePackage(location: PackageLocation) : Promise<Result<Package[], ResolveError>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("get_projects_in_dir", { path }) };
+    return { status: "ok", data: await TAURI_INVOKE("resolve_package", { location }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
 }
 },
-async searchRegistry(search: string, reg: Registry, customUrl: string | null) : Promise<Result<string[], SearchRegistryError>> {
+async searchRegistry(registry: Registry, query: string) : Promise<Result<SearchResult[], SearchRegistryError>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("search_registry", { search, reg, customUrl }) };
+    return { status: "ok", data: await TAURI_INVOKE("search_registry", { registry, query }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
@@ -43,12 +43,22 @@ async searchRegistry(search: string, reg: Registry, customUrl: string | null) : 
 
 /** user-defined types **/
 
-export type InvalidPath = "NotFound" | "NotADirectory" | "InvalidName" | "NotAbsolute" | "Unknown"
-export type Project = { name: string; project_type: ProjectType }
-export type ProjectType = "Rust" | "NodeJS" | "Deno" | "Python" | "Zig"
-export type ProjectsInDirError = "NotAProjectPath"
-export type Registry = "Cargo" | "Npm" | "Jsr" | "PyPI"
-export type SearchRegistryError = "UrlParseError" | "NetworkError" | "ServerError" | "ParseError"
+export type GitCommit = { commit: string } | { tag: string }
+export type GitPackageLocation = { git_type: GitPackageType; commit: GitCommit }
+export type GitPackageType = { local: string } | { remote: string }
+export type GitResolveError = never
+export type InvalidPathError = "not_found" | "not_a_directory" | "invalid_name" | "not_absolute" | "unknown"
+export type Language = "rust" | "node_js" | "deno" | "python" | "zig"
+export type LocalPackageLocation = { path: string }
+export type LocalResolveError = "no_packages_in_path" | { invalid_path: InvalidPathError }
+export type Package = { location: PackageLocation; name: string; version: string; description: string | null; authors: string[]; language: Language; dependencies: PackageLocation[] }
+export type PackageLocation = { local: LocalPackageLocation } | { git: GitPackageLocation } | { registry: RegistryPackageLocation } | { url: string } | { unknown: { name: string; description: string } }
+export type Registry = { cargo: string | null } | { npm: string | null } | { jsr: string | null } | { py_pi: string | null }
+export type RegistryPackageLocation = { registry: Registry; name: string; version: string }
+export type RegistryResolveError = never
+export type ResolveError = { local: LocalResolveError } | { git: GitResolveError } | { registry: RegistryResolveError }
+export type SearchRegistryError = "network" | "server" | "parse"
+export type SearchResult = { name: string }
 
 /** tauri-specta globals **/
 
