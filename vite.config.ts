@@ -1,10 +1,31 @@
-import { defineConfig } from "vite";
+import { defineConfig, type PluginOption } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
 
 // // @ts-expect-error process is a nodejs global
 const host = process.env.TAURI_DEV_HOST;
+
+const reactDevTools = (): PluginOption => {
+    return {
+        name: "react-devtools",
+        apply: "serve", // Only apply this plugin during development
+        transformIndexHtml(html) {
+            return {
+                html,
+                tags: [
+                    {
+                        tag: "script",
+                        attrs: {
+                            src: "http://localhost:8097",
+                        },
+                        injectTo: "head",
+                    },
+                ],
+            };
+        },
+    };
+};
 
 const ReactCompilerConfig = {};
 
@@ -18,6 +39,7 @@ export default defineConfig(async () => ({
             },
         }),
         tailwindcss(),
+        reactDevTools(),
     ],
 
     // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
