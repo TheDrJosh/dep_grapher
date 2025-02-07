@@ -7,7 +7,7 @@ import { projectSourceSchema, projectTypeSchema } from "../schemas";
 const graphParamsSchema = z.object({
     source: projectSourceSchema,
     value: z.string(),
-    type: projectTypeSchema
+    type: projectTypeSchema,
 });
 
 export type PackageInfo = z.infer<typeof graphParamsSchema>;
