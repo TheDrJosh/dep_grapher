@@ -1,4 +1,5 @@
 #![feature(io_error_more)]
+#![feature(exit_status_error)]
 
 use package::package_location::{is_path_valid, resolve_package};
 use registry::search_registry;
@@ -29,12 +30,7 @@ pub fn run() {
         .events(collect_events![]);
 
     #[cfg(debug_assertions)]
-    builder
-        .export(
-            Typescript::default().header("/* eslint-disable */\n// @ts-nocheck\n"),
-            "../src/bindings.ts",
-        )
-        .expect("Failed to export typescript bindings");
+    generate_bindings(&builder);
 
     tauri::Builder::default()
         .plugin(tauri_plugin_log::Builder::new().build())
@@ -58,4 +54,48 @@ pub fn run() {
         })
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
+}
+
+fn generate_bindings(builder: &tauri_specta::Builder) {
+    builder
+        .export(
+            Typescript::default().header("/* eslint-disable */\n// @ts-nocheck\n"),
+            "../src/bindings.ts",
+        )
+        .expect("Failed to export typescript bindings");
+
+    // bun prettier --write ../src/bindings.ts
+    run_command("bun prettier --write ../src/bindings.ts")
+        .expect("failed to run prettier on bindings.ts")
+        .status
+        .exit_ok()
+        .expect("prettier failed running on bindings.ts");
+
+    // cd .. && bun ts-to-zod
+    run_command("cd .. && bun ts-to-zod")
+        .expect("failed to run ts-to-zod")
+        .status
+        .exit_ok()
+        .expect("ts-to-zod failed");
+
+    // bun prettier --write ../src/bindings.zod.ts
+    run_command("bun prettier --write ../src/bindings.zod.ts")
+        .expect("failed to run prettier on bindings.zod.ts")
+        .status
+        .exit_ok()
+        .expect("prettier failed running on bindings.zod.ts");
+}
+
+fn run_command(command: &str) -> Result<std::process::Output, std::io::Error> {
+    if cfg!(target_os = "windows") {
+        std::process::Command::new("cmd")
+            .arg("/C")
+            .arg(command)
+            .output()
+    } else {
+        std::process::Command::new("sh")
+            .arg("-c")
+            .arg(command)
+            .output()
+    }
 }

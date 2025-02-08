@@ -1,9 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ScrollArea, Tabs } from "radix-ui";
-import { type PackageInfo } from "./graph";
 
 import { LocalProjectForm } from "../components/local_form";
 import { RegistryProjectForm } from "../components/registry_form";
+import { type PackageLocation } from "../bindings";
 
 export const Route = createFileRoute("/")({
     component: Index,
@@ -19,11 +19,16 @@ function Index() {
 }
 
 function RecentList() {
-    const sample_data: PackageInfo[] = [
+    const sample_data: PackageLocation[] = [
         {
-            source: "npm",
-            value: "leftpad",
-            type: "nodejs",
+            registry: {
+                registry: {
+                    registry_type: "npm",
+                    custom_url: null,
+                },
+                name: "left-pad",
+                version: "1.3.0",
+            },
         },
     ];
 
@@ -36,7 +41,7 @@ function RecentList() {
                         <div className="p-4">
                             {sample_data.map((data) => (
                                 <Link
-                                    key={data.value + data.source}
+                                    key={JSON.stringify(data)}
                                     to="/graph"
                                     search={data}
                                     className="hover:underline"

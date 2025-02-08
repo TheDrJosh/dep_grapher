@@ -1,30 +1,20 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { z } from "zod";
 import { zodValidator } from "@tanstack/zod-adapter";
-import { projectSourceSchema, projectTypeSchema } from "../schemas";
+import { packageLocationSchema } from "../bindings.zod";
 
-const graphParamsSchema = z.object({
-    source: projectSourceSchema,
-    value: z.string(),
-    type: projectTypeSchema,
-});
-
-export type PackageInfo = z.infer<typeof graphParamsSchema>;
-export type PackageSource = PackageInfo["source"];
 
 export const Route = createFileRoute("/graph")({
     component: RouteComponent,
-    validateSearch: zodValidator(graphParamsSchema),
+    validateSearch: zodValidator(packageLocationSchema),
 });
 
 function RouteComponent() {
-    const { source, value } = Route.useSearch();
+    const package_location = Route.useSearch();
 
     return (
         <div>
-            <span>source: {source}</span>
-            <span>value: {value}</span>
+            <span>location: {JSON.stringify(package_location)}</span>
         </div>
     );
 }
