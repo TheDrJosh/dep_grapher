@@ -12,7 +12,32 @@ pub struct Package {
     pub description: Option<String>,
     pub authors: Vec<String>,
     pub language: Language,
-    pub dependencies: Vec<PackageLocation>,
+    pub dependencies: Vec<Dependency>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Type)]
+pub struct Dependency {
+    location: PackageLocation,
+    name: String,
+    stage: Stage,
+    required_features: Vec<String>,
+    with_features: Vec<String>,
+    platform_requirements: PlatformRequirements,
+    optional: bool,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Type)]
+pub enum Stage {
+    Default,
+    Dev,
+    Build,
+    Custom(String)
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Type)]
+enum PlatformRequirements {
+    Whitelist(Vec<String>),
+    Blacklist(Vec<String>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Type)]

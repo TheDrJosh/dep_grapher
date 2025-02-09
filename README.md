@@ -27,6 +27,10 @@ dependancy tree viewer
   - use <https://d3js.org/d3-force>
   - [ ] save file
   - [ ] load file .dgf
+  - [ ] handle dependencies better
+    - [ ] platform specific
+    - [ ] features
+    - [ ] dev / build
 
 ## Info
 

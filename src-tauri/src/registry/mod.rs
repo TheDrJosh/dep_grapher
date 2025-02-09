@@ -35,8 +35,8 @@ impl RegistryType {
 
 #[derive(Debug, Clone, Serialize, Deserialize, Type)]
 pub struct Registry {
-    registry_type: RegistryType,
-    custom_url: Option<Url>,
+    pub registry_type: RegistryType,
+    pub custom_url: Option<Url>,
 }
 
 #[tauri::command]

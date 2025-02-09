@@ -2,7 +2,13 @@ use std::path::Path;
 
 use log::error;
 
-use crate::package::{package_location::PackageLocation, Language, Package};
+use crate::{
+    package::{
+        package_location::{registry::RegistryPackageLocation, PackageLocation},
+        Dependency, Language, Package,
+    },
+    registry::Registry,
+};
 
 use super::LocalPackageLocation;
 
@@ -14,6 +20,22 @@ pub async fn resolve_rust_package_info(path: &Path, location: &PackageLocation) 
     };
 
     if let Some(package) = manifest.package {
+        manifest.dependencies.iter().map(|(name, dep)| Dependency {
+            location: PackageLocation::Registry(RegistryPackageLocation {
+                registry: Registry {
+                    registry_type: crate::registry::RegistryType::Cargo,
+                    custom_url: None,
+                },
+                name: dep.package().unwrap().to_string(),
+                version: dep.detail().unwrap().version.as_ref().unwrap().to_string(),
+            }),
+            name: name.clone(),
+            stage: crate::package::Stage::Default,
+            required_features: vec![],
+            platform_requirements: crate::package::PlatformRequirements::Blacklist(vec![]),
+            optional: dep.optional(),
+            with_features: vec![],
+        });
         names.push(Package {
             location: location.clone(),
             name: package.name.clone(),
